@@ -1,0 +1,168 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament';
+@source '../../../../resources/views/filament';
+
+/* ============================================================
+   TEMA CUSTOM — LAS MARGARITAS
+   Refinamientos sobre el theme default de Filament v3/v4/v5
+   ============================================================ */
+
+@layer base {
+    :root {
+        /* Bordes más redondeados */
+        --fi-input-border-radius: 0.5rem;
+        --fi-btn-border-radius: 0.5rem;
+
+        /* Tipografía un punto más cómoda */
+        --fi-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+}
+
+@layer components {
+    /* ============================================================
+       LOGO DEL HEADER
+       ============================================================ */
+    .fi-logo {
+        max-height: 2.5rem;
+        width: auto;
+    }
+
+    /* ============================================================
+       PANTALLA DE LOGIN — Centrar logo + presentación pulcra
+       ============================================================ */
+    .fi-simple-page .fi-logo {
+        max-height: 5rem;
+        margin: 0 auto 1rem;
+        display: block;
+    }
+
+    .fi-simple-page .fi-simple-main {
+        border-radius: 1rem;
+    }
+
+    /* Fondo de la pantalla de login con un toque sutil */
+    .fi-simple-layout {
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+    }
+
+    .dark .fi-simple-layout {
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+    }
+
+    /* ============================================================
+       SIDEBAR — más limpio
+       ============================================================ */
+    .fi-sidebar-nav-groups {
+        gap: 1.5rem;
+    }
+
+    .fi-sidebar-group-label {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgb(100 116 139);
+    }
+
+    .dark .fi-sidebar-group-label {
+        color: rgb(148 163 184);
+    }
+
+    /* ============================================================
+       BADGES — más prominentes con sombra sutil
+       ============================================================ */
+    .fi-badge {
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
+
+    /* ============================================================
+       CARDS / SECTIONS — bordes más suaves y separación
+       ============================================================ */
+    .fi-section {
+        border-radius: 0.875rem;
+    }
+
+    .fi-section-header {
+        padding-bottom: 1rem;
+    }
+
+    .fi-section-header-heading {
+        font-weight: 600;
+    }
+
+    /* ============================================================
+       BOTONES — feedback más natural
+       ============================================================ */
+    .fi-btn {
+        font-weight: 500;
+        transition: all 0.15s ease;
+    }
+
+    .fi-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.25);
+    }
+
+    /* ============================================================
+       TABLAS — header con sutil acento verde
+       ============================================================ */
+    .fi-ta-header-cell {
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: rgb(71 85 105);
+    }
+
+    .dark .fi-ta-header-cell {
+        color: rgb(148 163 184);
+    }
+
+    /* ============================================================
+       WIDGETS DEL DASHBOARD
+       ============================================================ */
+    .fi-wi-stats-overview-stat {
+        border-radius: 1rem;
+    }
+
+    .fi-wi-stats-overview-stat-value {
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    /* ============================================================
+       FORMULARIOS — inputs con esquinas más amigables
+       ============================================================ */
+    .fi-input-wrp,
+    .fi-select-input,
+    .fi-textarea {
+        border-radius: 0.5rem;
+    }
+
+    /* ============================================================
+       SCROLLBAR — más sutil
+       ============================================================ */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(16, 185, 129, 0.2);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(16, 185, 129, 0.4);
+    }
+}

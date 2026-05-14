@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" role="img" aria-labelledby="logoTitle">
+    <title id="logoTitle">Asilo Las Margaritas</title>
+    <style>
+        .wordmark { fill: #064e3b; }
+        .tagline { fill: #6b7280; }
+        @media (prefers-color-scheme: dark) {
+            .wordmark { fill: #f9fafb; }
+            .tagline { fill: #9ca3af; }
+        }
+    </style>
+    <g transform="translate(50, 50)">
+        <ellipse cx="0" cy="-26" rx="9" ry="20" fill="#10b981"/>
+        <ellipse cx="24.7" cy="-8.0" rx="9" ry="20" fill="#10b981" transform="rotate(72 24.7 -8.0)"/>
+        <ellipse cx="15.3" cy="21.0" rx="9" ry="20" fill="#10b981" transform="rotate(144 15.3 21.0)"/>
+        <ellipse cx="-15.3" cy="21.0" rx="9" ry="20" fill="#10b981" transform="rotate(216 -15.3 21.0)"/>
+        <ellipse cx="-24.7" cy="-8.0" rx="9" ry="20" fill="#10b981" transform="rotate(288 -24.7 -8.0)"/>
+        <circle cx="0" cy="0" r="11" fill="#fbbf24"/>
+        <circle cx="0" cy="0" r="7" fill="#f59e0b"/>
+    </g>
+    <text x="100" y="50" class="wordmark" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="600">Las Margaritas</text>
+    <text x="100" y="70" class="tagline" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="400" letter-spacing="2">ASILO Y CASA DE DESCANSO</text>
+</svg>

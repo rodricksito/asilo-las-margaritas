@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="iconTitle">
+    <title id="iconTitle">Las Margaritas</title>
+    <rect x="0" y="0" width="120" height="120" rx="24" fill="#10b981"/>
+    <g transform="translate(60, 60)">
+        <ellipse cx="0" cy="-26" rx="11" ry="22" fill="#ffffff"/>
+        <ellipse cx="24.7" cy="-8.0" rx="11" ry="22" fill="#ffffff" transform="rotate(72 24.7 -8.0)"/>
+        <ellipse cx="15.3" cy="21.0" rx="11" ry="22" fill="#ffffff" transform="rotate(144 15.3 21.0)"/>
+        <ellipse cx="-15.3" cy="21.0" rx="11" ry="22" fill="#ffffff" transform="rotate(216 -15.3 21.0)"/>
+        <ellipse cx="-24.7" cy="-8.0" rx="11" ry="22" fill="#ffffff" transform="rotate(288 -24.7 -8.0)"/>
+        <circle cx="0" cy="0" r="13" fill="#fbbf24"/>
+        <circle cx="0" cy="0" r="8" fill="#f59e0b"/>
+    </g>
+</svg>
