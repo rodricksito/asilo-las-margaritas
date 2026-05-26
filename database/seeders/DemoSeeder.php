@@ -12,6 +12,10 @@ use App\Models\Paciente;
 use App\Models\Receta;
 use App\Models\Solicitud;
 use App\Models\Sucursal;
+
+use App\Models\Traspaso;
+use App\Models\User;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +39,7 @@ class DemoSeeder extends Seeder
         $pacientes = $this->seedPacientes($torreon, $gomez, $doctores, $familiares);
         $recetas = $this->seedRecetas($pacientes, $doctores, $medicamentos);
         $this->seedSolicitudes($recetas, $enfermeras, $articulos);
+        $this->seedTraspasos($medicamentos, $torreon, $gomez);
 
         $this->printSummary();
     }
@@ -563,6 +568,45 @@ class DemoSeeder extends Seeder
         $this->command->info('   ✓ ' . $totalCreadas . " solicitudes ({$totalConArticulos} con artículos)");
     }
 
+    private function seedTraspasos(array $medicamentos, Sucursal $torreon, Sucursal $gomez): void
+    {
+        $usuario = User::first();
+        $usuarioId = $usuario?->id;
+        
+        $data = [
+            [0,  100, $torreon, $gomez,   45, 'completado', 'Reabastecimiento mensual de Gómez Palacio.'],
+            [3,   80, $torreon, $gomez,   38, 'completado', 'Stock bajo en sucursal destino.'],
+            [6,   50, $gomez,   $torreon, 30, 'completado', 'Redistribución por demanda en Torreón Centro.'],
+            [12, 150, $torreon, $gomez,   22, 'completado', 'Paracetamol para inventario de invierno.'],
+            [9,   60, $gomez,   $torreon, 15, 'completado', 'Omeprazol próximo a caducar, se concentra en Torreón.'],
+            [14,  25, $torreon, $gomez,   10, 'pendiente',  'En tránsito — esperando confirmación de recepción.'],
+            [20,  40, $gomez,   $torreon, 7,  'completado', 'Sertralina solicitada por área de salud mental.'],
+            [3,   30, $torreon, $gomez,   3,  'pendiente',  'Traspaso urgente por agotamiento de stock.'],
+        ];
+
+        $total = 0;
+        foreach ($data as [$medIdx, $cantidad, $origen, $destino, $diasAtras, $estado, $obs]) {
+            if (! isset($medicamentos[$medIdx])) {
+                continue;
+            }
+
+            Traspaso::create([
+                'medicamento_id' => $medicamentos[$medIdx]->id,
+                'sucursal_origen_id' => $origen->id,
+                'sucursal_destino_id' => $destino->id,
+                'usuario_id' => $usuarioId,
+                'cantidad' => $cantidad,
+                'fecha' => now()->subDays($diasAtras),
+                'estado' => $estado,
+                'observaciones' => $obs,
+            ]);
+
+            $total++;
+        }
+
+        $this->command->info('   ✓ ' . $total . ' traspasos entre sucursales');
+    }
+
     private function observacionPorEstado(string $estado): ?string
     {
         $opciones = match ($estado) {
@@ -612,6 +656,7 @@ class DemoSeeder extends Seeder
                 ['  └─ Incompletas', Solicitud::where('estado', 'incompleta')->count()],
                 ['  └─ Vencidas', Solicitud::where('estado', 'vencida')->count()],
                 ['Entregas de artículos', EntregaArticulo::count()],
+                ['Traspasos', Traspaso::count()],
             ]
         );
     }

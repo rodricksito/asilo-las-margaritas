@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EntregaArticulo;
 use App\Models\Medicamento;
 use App\Models\Paciente;
+use App\Models\Traspaso;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,5 +43,39 @@ class ReporteController extends Controller
         ])->setPaper('letter', 'landscape');
 
         return $pdf->stream('reporte-pacientes-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Reporte PDF de entregas de articulos personales.
+     */
+    public function entregas(): Response
+    {
+        $entregas = EntregaArticulo::with(['paciente', 'articulo', 'solicitud'])
+            ->orderByDesc('fecha')
+            ->get();
+
+        $pdf = Pdf::loadView('pdfs.reporte-entregas', [
+            'entregas' => $entregas,
+            'fecha' => now(),
+        ])->setPaper('letter', 'landscape');
+
+        return $pdf->stream('reporte-entregas-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Reporte PDF de traspasos de medicamentos entre sucursales.
+     */
+    public function traspasos(): Response
+    {
+        $traspasos = Traspaso::with(['medicamento', 'sucursalOrigen', 'sucursalDestino', 'usuario'])
+            ->orderByDesc('fecha')
+            ->get();
+
+        $pdf = Pdf::loadView('pdfs.reporte-traspasos', [
+            'traspasos' => $traspasos,
+            'fecha' => now(),
+        ])->setPaper('letter', 'landscape');
+
+        return $pdf->stream('reporte-traspasos-' . now()->format('Y-m-d') . '.pdf');
     }
 }

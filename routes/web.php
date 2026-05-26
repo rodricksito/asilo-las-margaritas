@@ -18,4 +18,6 @@ use App\Http\Controllers\ReporteController;
 Route::middleware(['auth'])->prefix('reportes')->name('reportes.')->group(function () {
     Route::get('/medicamentos', [ReporteController::class, 'medicamentos'])->name('medicamentos');
     Route::get('/pacientes', [ReporteController::class, 'pacientes'])->name('pacientes');
+    Route::get('/entregas', [ReporteController::class, 'entregas'])->name('entregas');
+    Route::get('/traspasos', [ReporteController::class, 'traspasos'])->name('traspasos');
 });
