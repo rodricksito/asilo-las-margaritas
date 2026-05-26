@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Medicamentos</title>
+    <style>
+        @page { margin: 1.2cm 1.2cm 1cm 1.2cm; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 9pt;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            border-bottom: 3px solid #10b981;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        .header-table { width: 100%; border-collapse: collapse; }
+        .brand h1 {
+            color: #10b981;
+            margin: 0;
+            font-size: 18pt;
+            letter-spacing: 1px;
+        }
+        .brand .subtitle { color: #6b7280; font-size: 8pt; margin-top: 2px; }
+        .meta {
+            text-align: right;
+            vertical-align: top;
+            font-size: 8pt;
+            color: #6b7280;
+        }
+        .doc-title {
+            text-align: center;
+            font-size: 13pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 4px 0 14px 0;
+            color: #1f2937;
+        }
+
+        table.data { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        table.data th {
+            background: #d1fae5;
+            color: #065f46;
+            text-align: left;
+            padding: 6px 8px;
+            border: 1px solid #6ee7b7;
+            font-size: 7.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        table.data td {
+            padding: 5px 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 8.5pt;
+        }
+        table.data tr:nth-child(even) td { background: #f9fafb; }
+        .num { text-align: right; font-variant-numeric: tabular-nums; }
+        .center { text-align: center; }
+        .med-name { font-weight: bold; color: #111827; }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 7.5pt;
+            font-weight: bold;
+        }
+        .badge-activo { background: #d1fae5; color: #065f46; }
+        .badge-inactivo { background: #fee2e2; color: #991b1b; }
+        .caduca-pronto { color: #b91c1c; font-weight: bold; }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 7pt;
+            color: #9ca3af;
+            text-align: center;
+        }
+        .resumen {
+            margin-top: 12px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 8px 12px;
+            font-size: 8.5pt;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <table class="header-table">
+        <tr>
+            <td class="brand">
+                <h1>ASILO LAS MARGARITAS</h1>
+                <div class="subtitle">Sistema de control de medicamentos</div>
+            </td>
+            <td class="meta">
+                Generado el {{ $fecha->format('d/m/Y H:i') }}<br>
+                Total de registros: {{ $medicamentos->count() }}
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="doc-title">Reporte de inventario de medicamentos</div>
+
+<table class="data">
+    <thead>
+        <tr>
+            <th style="width: 5%;" class="center">#</th>
+            <th style="width: 22%;">Medicamento</th>
+            <th style="width: 18%;">Presentación</th>
+            <th style="width: 22%;">Sucursal</th>
+            <th style="width: 10%;" class="num">Stock</th>
+            <th style="width: 13%;" class="center">Caducidad</th>
+            <th style="width: 10%;" class="center">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($medicamentos as $i => $med)
+            @php
+                $caducaPronto = $med->fecha_caducidad
+                    && \Carbon\Carbon::parse($med->fecha_caducidad)->lte(now()->addMonths(3));
+            @endphp
+            <tr>
+                <td class="center">{{ $i + 1 }}</td>
+                <td class="med-name">{{ $med->nombre }}</td>
+                <td>{{ $med->presentacion }}</td>
+                <td>{{ $med->sucursal?->nombre ?? '—' }}</td>
+                <td class="num">{{ number_format($med->stock) }} u.</td>
+                <td class="center {{ $caducaPronto ? 'caduca-pronto' : '' }}">
+                    {{ $med->fecha_caducidad ? \Carbon\Carbon::parse($med->fecha_caducidad)->format('d/m/Y') : '—' }}
+                </td>
+                <td class="center">
+                    @if($med->activo)
+                        <span class="badge badge-activo">Activo</span>
+                    @else
+                        <span class="badge badge-inactivo">Inactivo</span>
+                    @endif
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="7" class="center" style="padding: 16px; color: #9ca3af;">
+                    No hay medicamentos registrados.
+                </td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
+<div class="resumen">
+    <strong>Resumen:</strong>
+    {{ $medicamentos->count() }} medicamentos en total ·
+    {{ $medicamentos->where('activo', true)->count() }} activos ·
+    {{ $medicamentos->sum('stock') }} unidades en inventario ·
+    {{ $medicamentos->filter(fn($m) => $m->fecha_caducidad && \Carbon\Carbon::parse($m->fecha_caducidad)->lte(now()->addMonths(3)))->count() }} próximos a caducar (≤ 3 meses)
+</div>
+
+<div class="footer">
+    Asilo Las Margaritas — Reporte generado automáticamente por el sistema · {{ $fecha->format('d/m/Y H:i') }}
+</div>
+
+</body>
+</html>
