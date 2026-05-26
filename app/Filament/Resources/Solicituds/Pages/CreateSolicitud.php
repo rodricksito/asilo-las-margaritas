@@ -19,6 +19,8 @@ use Filament\Resources\Pages\CreateRecord;
 use Filament\Schemas\Components\Wizard\Step;
 use Illuminate\Support\HtmlString;
 
+use Filament\Actions\Action;
+
 class CreateSolicitud extends CreateRecord
 {
     use CreateRecord\Concerns\HasWizard;
@@ -31,6 +33,17 @@ class CreateSolicitud extends CreateRecord
      */
     protected array $medicamentosData = [];
     protected array $entregasData = [];
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('volver')
+                ->label('Volver al listado')
+                ->icon('heroicon-o-arrow-left')
+                ->color('gray')
+                ->url(static::getResource()::getUrl('index')),
+        ];
+    }
 
     protected function getSteps(): array
     {

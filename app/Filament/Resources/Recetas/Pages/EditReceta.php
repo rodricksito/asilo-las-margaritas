@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Recetas\Pages;
 
 use App\Filament\Resources\Recetas\RecetaResource;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
@@ -16,15 +17,16 @@ class EditReceta extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('volver')
+                ->label('Volver al listado')
+                ->icon('heroicon-o-arrow-left')
+                ->color('gray')
+                ->url(static::getResource()::getUrl('index')),
             ViewAction::make(),
             DeleteAction::make(),
         ];
     }
 
-    /**
-     * Al cargar el formulario, convertimos los medicamentos del pivote
-     * al formato que entiende el Repeater.
-     */
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['medicamentos'] = $this->record->medicamentos->map(fn ($m) => [
@@ -46,11 +48,6 @@ class EditReceta extends EditRecord
         return $data;
     }
 
-    /**
-     * Estrategia: borrar todos los pivotes y recrear con los datos nuevos.
-     * Más simple que diff y suficientemente eficiente para recetas
-     * (rara vez tienen más de 5-10 medicamentos).
-     */
     protected function afterSave(): void
     {
         if ($this->medicamentosData !== null) {

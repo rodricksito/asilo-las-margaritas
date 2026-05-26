@@ -3,21 +3,28 @@
 namespace App\Filament\Resources\Recetas\Pages;
 
 use App\Filament\Resources\Recetas\RecetaResource;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateReceta extends CreateRecord
 {
     protected static string $resource = RecetaResource::class;
 
-    /**
-     * Almacenamos los datos del Repeater aquí porque hay que removerlos
-     * antes de crear la Receta (no son columnas del modelo, son del pivote).
-     */
     protected ?array $medicamentosData = null;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('volver')
+                ->label('Volver al listado')
+                ->icon('heroicon-o-arrow-left')
+                ->color('gray')
+                ->url(static::getResource()::getUrl('index')),
+        ];
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // Sacamos los medicamentos del array — Receta::create() no debe verlos
         $this->medicamentosData = $data['medicamentos'] ?? [];
         unset($data['medicamentos']);
 
@@ -26,8 +33,6 @@ class CreateReceta extends CreateRecord
 
     protected function afterCreate(): void
     {
-        // Ya tenemos $this->record (la receta recién creada).
-        // Adjuntamos cada medicamento al pivote con sus datos extra.
         if ($this->medicamentosData) {
             foreach ($this->medicamentosData as $item) {
                 $this->record->medicamentos()->attach($item['medicamento_id'], [

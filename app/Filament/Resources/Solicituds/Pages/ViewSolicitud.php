@@ -14,6 +14,12 @@ class ViewSolicitud extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('volver')
+                ->label('Volver al listado')
+                ->icon('heroicon-o-arrow-left')
+                ->color('gray')
+                ->url(static::getResource()::getUrl('index')),
+
             Action::make('imprimir_solicitud')
                 ->label('Imprimir solicitud')
                 ->icon('heroicon-o-printer')
