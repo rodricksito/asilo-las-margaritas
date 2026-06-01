@@ -12,6 +12,7 @@ use App\Filament\Resources\Sucursals\Tables\SucursalsTable;
 use App\Models\Sucursal;
 use BackedEnum;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -36,6 +37,17 @@ class SucursalResource extends Resource
     protected static ?string $slug = 'sucursales';
 
     protected static ?string $recordTitleAttribute = 'nombre';
+
+    /**
+     * Buscador global: lleva al listado con el termino precargado,
+     * en vez de abrir directamente la vista del registro.
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('index', [
+            'tableSearch' => $record->nombre,
+        ]);
+    }
 
     public static function form(Schema $schema): Schema
     {

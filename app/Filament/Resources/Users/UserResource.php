@@ -12,6 +12,7 @@ use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
 use BackedEnum;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -36,6 +37,17 @@ class UserResource extends Resource
     protected static ?string $slug = 'usuarios';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    /**
+     * Buscador global: lleva al listado con el termino precargado,
+     * en vez de abrir directamente la vista del registro.
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('index', [
+            'tableSearch' => $record->name,
+        ]);
+    }
 
     public static function form(Schema $schema): Schema
     {

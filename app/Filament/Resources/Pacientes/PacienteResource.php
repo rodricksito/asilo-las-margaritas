@@ -12,6 +12,7 @@ use App\Filament\Resources\Pacientes\Schemas\PacienteInfolist;
 use App\Filament\Resources\Pacientes\Tables\PacientesTable;
 use App\Models\Paciente;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -37,6 +38,17 @@ class PacienteResource extends Resource
     protected static ?string $slug = 'pacientes';
 
     protected static ?string $recordTitleAttribute = 'nombre';
+
+    /**
+     * Buscador global: lleva al listado con el termino precargado,
+     * en vez de abrir directamente la vista del registro.
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('index', [
+            'tableSearch' => $record->nombre,
+        ]);
+    }
 
     public static function form(Schema $schema): Schema
     {
