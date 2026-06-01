@@ -19,7 +19,7 @@ class FamiliarsTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
@@ -27,13 +27,13 @@ class FamiliarsTable
                     ->label('Parentesco')
                     ->badge()
                     ->color('gray')
-                    ->searchable(),
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(parentesco) LIKE unaccent(?)", ['%' . $search . '%'])),
 
                 TextColumn::make('telefono')
                     ->label('Teléfono')
                     ->copyable()
                     ->copyMessage('Teléfono copiado')
-                    ->searchable(),
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(telefono) LIKE unaccent(?)", ['%' . $search . '%'])),
 
                 TextColumn::make('email')
                     ->label('Email')

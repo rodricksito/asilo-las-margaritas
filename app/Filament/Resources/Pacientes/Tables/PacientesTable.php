@@ -19,7 +19,7 @@ class PacientesTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
@@ -29,13 +29,13 @@ class PacientesTable
 
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursal', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('doctor.nombre')
                     ->label('Doctor')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('doctor', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->placeholder('Sin asignar')
                     ->toggleable(),

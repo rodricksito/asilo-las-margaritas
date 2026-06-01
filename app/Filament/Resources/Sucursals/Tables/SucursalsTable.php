@@ -19,16 +19,16 @@ class SucursalsTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable(),
                 TextColumn::make('direccion')
                     ->label('Dirección')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(direccion) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->limit(40)
                     ->toggleable(),
                 TextColumn::make('telefono')
                     ->label('Teléfono')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(telefono) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->toggleable(),
                 IconColumn::make('activa')
                     ->label('Activa')

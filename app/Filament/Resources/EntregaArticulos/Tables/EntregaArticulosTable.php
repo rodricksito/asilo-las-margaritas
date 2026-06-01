@@ -18,13 +18,13 @@ class EntregaArticulosTable
             ->columns([
                 TextColumn::make('paciente.nombre')
                     ->label('Paciente')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('paciente', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('articulo.nombre')
                     ->label('Artículo')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('articulo', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable(),
 
                 TextColumn::make('cantidad')

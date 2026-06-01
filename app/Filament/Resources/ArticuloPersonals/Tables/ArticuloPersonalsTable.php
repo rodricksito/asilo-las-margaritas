@@ -19,7 +19,7 @@ class ArticuloPersonalsTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Artículo')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 

@@ -20,13 +20,13 @@ class DoctorsTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('cedula')
                     ->label('Cédula')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(cedula) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->copyable()
                     ->copyMessage('Cédula copiada'),
 
@@ -38,7 +38,7 @@ class DoctorsTable
 
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursal', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->toggleable(),
 

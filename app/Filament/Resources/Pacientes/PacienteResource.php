@@ -12,6 +12,7 @@ use App\Filament\Resources\Pacientes\Schemas\PacienteInfolist;
 use App\Filament\Resources\Pacientes\Tables\PacientesTable;
 use App\Models\Paciente;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -48,6 +49,46 @@ class PacienteResource extends Resource
         return static::getUrl('index', [
             'tableSearch' => $record->nombre,
         ]);
+    }
+
+    /**
+     * Busqueda global insensible a tildes y mayusculas.
+     * Usa la funcion unaccent() registrada en AppServiceProvider.
+     * "maria" encuentra "Maria", "jose" encuentra "Jose", etc.
+     */
+    protected static function applyGlobalSearchAttributeConstraint(
+        Builder $query,
+        string $search,
+        array $searchAttributes,
+        bool &$isFirst,
+    ): Builder {
+        foreach ($searchAttributes as $searchAttribute) {
+            $whereClause = $isFirst ? 'whereRaw' : 'orWhereRaw';
+
+            // Para relaciones con punto, usamos comportamiento default de Filament
+            if (str_contains($searchAttribute, '.')) {
+                parent::applyGlobalSearchAttributeConstraint(
+                    $query,
+                    $search,
+                    [$searchAttribute],
+                    $isFirst,
+                );
+                continue;
+            }
+
+            $column = $query->qualifyColumn($searchAttribute);
+
+            // unaccent() normaliza el texto: minusculas + sin tildes
+            // Esta funcion esta registrada en AppServiceProvider
+            $query->{$whereClause}(
+                "unaccent({$column}) LIKE unaccent(?)",
+                ['%' . $search . '%'],
+            );
+
+            $isFirst = false;
+        }
+
+        return $query;
     }
 
     public static function form(Schema $schema): Schema

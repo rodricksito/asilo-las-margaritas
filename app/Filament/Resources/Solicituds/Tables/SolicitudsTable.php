@@ -26,14 +26,14 @@ class SolicitudsTable
 
                 TextColumn::make('paciente.nombre')
                     ->label('Paciente')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('paciente', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('familiar.nombre')
                     ->label('Entregó')
                     ->placeholder('—')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('familiar', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->toggleable(),
 
                 TextColumn::make('fecha')

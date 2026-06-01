@@ -23,7 +23,7 @@ class TraspasosTable
 
                 TextColumn::make('medicamento.nombre')
                     ->label('Medicamento')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('medicamento', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->weight('medium'),
 
@@ -36,11 +36,11 @@ class TraspasosTable
 
                 TextColumn::make('sucursalOrigen.nombre')
                     ->label('Origen')
-                    ->searchable(),
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursalOrigen', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))),
 
                 TextColumn::make('sucursalDestino.nombre')
                     ->label('Destino')
-                    ->searchable(),
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursalDestino', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))),
 
                 TextColumn::make('fecha')
                     ->label('Fecha')

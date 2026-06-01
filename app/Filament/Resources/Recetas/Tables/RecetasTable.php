@@ -26,13 +26,13 @@ class RecetasTable
 
                 TextColumn::make('paciente.nombre')
                     ->label('Paciente')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('paciente', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('doctor.nombre')
                     ->label('Doctor')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('doctor', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->toggleable(),
 

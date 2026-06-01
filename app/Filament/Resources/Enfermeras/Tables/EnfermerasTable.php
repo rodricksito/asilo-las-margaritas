@@ -20,7 +20,7 @@ class EnfermerasTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
@@ -37,7 +37,7 @@ class EnfermerasTable
 
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursal', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->toggleable(),
 

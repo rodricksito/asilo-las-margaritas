@@ -23,18 +23,18 @@ class MedicamentosTable
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Medicamento')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('presentacion')
                     ->label('Presentación')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(presentacion) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->toggleable(),
 
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursal', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->toggleable(),
 

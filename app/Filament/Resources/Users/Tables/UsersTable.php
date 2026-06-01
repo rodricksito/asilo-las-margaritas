@@ -18,13 +18,13 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Nombre')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(name) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->sortable()
                     ->weight('medium'),
 
                 TextColumn::make('email')
                     ->label('Correo')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereRaw("unaccent(email) LIKE unaccent(?)", ['%' . $search . '%']))
                     ->copyable()
                     ->copyMessage('Correo copiado'),
 
@@ -48,7 +48,7 @@ class UsersTable
 
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
-                    ->searchable()
+                    ->searchable(query: fn ($query, $search) => $query->whereHas('sucursal', fn ($q) => $q->whereRaw("unaccent(nombre) LIKE unaccent(?)", ['%' . $search . '%'])))
                     ->sortable()
                     ->placeholder('—')
                     ->toggleable(),
